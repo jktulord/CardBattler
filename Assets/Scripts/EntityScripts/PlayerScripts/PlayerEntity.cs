@@ -60,7 +60,7 @@ namespace Assets.Scripts.PlayerScripts
             if (Energy - card.Stats.Cost.Value >= 0)
             {
                 Energy -= card.Stats.Cost.Value;
-                AttackManager.Play(card.Stats.Effect, player, target);
+                AttackManager.Play(card.Stats.Effect, player, new List<IEntity> { target });
                 card.Disapear();
                 EnergyCounter.text = "" + Energy;
                 ret = true;

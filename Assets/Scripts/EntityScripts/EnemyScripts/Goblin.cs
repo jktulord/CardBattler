@@ -1,6 +1,6 @@
 ﻿using Assets.Scripts.CardScripts;
 using Assets.Scripts.CardScripts.CardEffect;
-using Assets.Scripts.EntityScripts.EnemyScripts.Intentions;
+using Assets.Scripts.CardScripts.CardEffect.CardAction;
 using Assets.Scripts.PlayerScripts;
 using System;
 using System.Collections.Generic;
@@ -28,10 +28,30 @@ namespace Assets.Scripts.EntityScripts.EnemyScripts
             Hp = MaxHp;
             Attacks = new List<ICardEffect>
             {
-                new DefaultDamageEffect(10),
-                new DefaultDamageEffect(6),
-                new DefaultDamageEffect(2),
-                new DefaultDamageEffect(11)
+                new CustomEffect(
+                    new List<Func<IEntity, List<IEntity>, List<int>, bool>>
+                    {
+                        SimpleActions.Damage
+                    },
+                    new List<List<int>> 
+                    {
+                        new List<int>
+                        {
+                            5
+                        }
+                    }),
+                new CustomEffect(
+                    new List<Func<IEntity, List<IEntity>, List<int>, bool>>
+                    {
+                        SimpleActions.Damage
+                    },
+                    new List<List<int>>
+                    {
+                        new List<int>
+                        {
+                            10
+                        }
+                    })
             };
             NextAttack = Attacks[0];
             ShowNextIntetion();
@@ -52,7 +72,7 @@ namespace Assets.Scripts.EntityScripts.EnemyScripts
 
         public void Attack()
         {
-            AttackManager.Play(NextAttack, player, player);
+            AttackManager.Play(NextAttack, this, new List<IEntity> { player });
         }
 
         public void ChangeAttack()
@@ -70,7 +90,7 @@ namespace Assets.Scripts.EntityScripts.EnemyScripts
 
         public void ShowNextIntetion()
         {
-            Intention.UpdateByAction(NextAttack.Actions[0]);            
+            Intention.UpdateByAction(NextAttack);            
         }
     }
 }

@@ -2,9 +2,11 @@ using Assets.Scripts;
 using Assets.Scripts.CardScripts;
 using Assets.Scripts.CardScripts.CardEffect;
 using Assets.Scripts.CardScripts.CardEffect.CardAction;
+using Assets.Scripts.EntityScripts;
 using Assets.Scripts.EntityScripts.EnemyScripts;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.PlayerScripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,80 +73,57 @@ public class HandPlaceScript : MonoBehaviour, IDropHandler
     public List<CardStats> GetMockDeck()
     {
 
-        CardStats LightHit = new CardStats("Percise Hit",
-            "Does 2 damage",
-            new BasicCardCost(0),
-            new DefaultDamageEffect(2));
+        
 
         CardStats Throw = new CardStats("Throw",
             "Does 5 damage",
             new BasicCardCost(2),
-            new DefaultDamageEffect(5));
-
+            new CustomEffect(
+                new List<Func<IEntity, List<IEntity>, List<int>, bool>>{
+                    SimpleActions.Damage
+                }, 
+                new List<List<int>> { 
+                    new List<int>
+                    {
+                        5
+                    }
+                }));
         CardStats PowerPunch = new CardStats("PowerPunch",
             "Does 7 damage",
-            new BasicCardCost(4),
-            new DefaultDamageEffect(7));
-
-        CardStats PerciseHit = new CardStats("Percise Hit",
-            "Does 17 damage",
-            new BasicCardCost(7),
-            new DefaultDamageEffect(20));
-
-        CardStats GuardBlock = new CardStats("Guard Block",
-            "Gain 2 block",
-            new BasicCardCost(0),
-            new DefaultBlockEffect(2));
-
-        CardStats DodgeRoll = new CardStats("Dodge Roll",
-            "Gain 1 dodge point",
-            new BasicCardCost(0),
-            new DefaultDodgeEffect(1));
-
-        CardStats DirtyParry = new CardStats("Dirty Parry",
-            "Gain 4 Parry point",
-            new BasicCardCost(0),
-            new DefaultParryEffect(4));
-
-        CardStats HealthPotion = new CardStats("Health Potion",
-            "Heal 20 points",
-            new BasicCardCost(9),
-            new DefaultHealEffect(20));
-
-        CardStats UltimateCard = new CardStats("Ultimate",
-            "Deal 1x4 damage, gain 1 dodge point, heal 1 point, gain 1 parry point, and make your pp hard",
-            new BasicCardCost(5),
+            new BasicCardCost(2),
             new CustomEffect(
-                20, new List<ICardAction> 
-                { 
-                    new Damage(1),
-                    new Dodge(1),
-                    new Heal(1),
-                    new Parry(1),
-                    new Damage(1),
-                    new Damage(1),
-                    new Damage(1) 
-                }    
-                ));
+                new List<Func<IEntity, List<IEntity>, List<int>, bool>>{
+                    SimpleActions.Damage
+                },
+                new List<List<int>> {
+                    new List<int>
+                    {
+                        7
+                    }
+                }));
+        CardStats PerciseHit = new CardStats("Throw",
+            "Does 20 damage",
+            new BasicCardCost(7),
+            new CustomEffect(
+                new List<Func<IEntity, List<IEntity>, List<int>, bool>>{
+                    SimpleActions.Damage
+                },
+                new List<List<int>> {
+                    new List<int>
+                    {
+                        20
+                    }
+                }));
+
 
         List<CardStats> MockDeck = new List<CardStats>
         {
-            LightHit,
-            LightHit,
             Throw,
             Throw,
             PowerPunch,
             PowerPunch,
             PerciseHit,
             PerciseHit,
-            GuardBlock,
-            GuardBlock,
-            DodgeRoll,
-            DodgeRoll,
-            DirtyParry,
-            DirtyParry,
-            HealthPotion,
-            UltimateCard
         };
 
         return MockDeck;

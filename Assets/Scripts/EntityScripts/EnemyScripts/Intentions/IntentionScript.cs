@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Assets.Scripts.CardScripts.CardEffect.CardAction;
+using Assets.Scripts.CardScripts;
 
 public class IntentionScript : MonoBehaviour
 {
@@ -14,9 +15,9 @@ public class IntentionScript : MonoBehaviour
         ValueText = transform.Find("ValueCounter").GetComponent<TMP_Text>();
     }
 
-    public void UpdateByAction(ICardAction action)
+    public void UpdateByAction(ICardEffect effect)
     {
-        ValueText.text = "" + action.Value;
+        ValueText.text = "" + effect.Values[0][0];
     }
 
     
