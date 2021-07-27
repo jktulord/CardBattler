@@ -1,24 +1,56 @@
+using Assets.Exploration.Scripts.EntityStats;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MapGenerationScript : MonoBehaviour
 {
-    public GameObject Player;
+    public PlayerSpotScript Player;
+    public List<EntityStats> Enemies;
     public List<List<GameObject>> Nodes;
+
+    public EntityPanelScript DebugThing;
 
     // Start is called before the first frame update
     void Start()
     {
-        Player = GameObject.Find("Player");
-        GameObject Node = Resources.Load<GameObject>("Prefabs/Node");
-        GameObject Line = Resources.Load<GameObject>("Prefabs/Line");
+        Player = GameObject.Find("PlayerSpot").GetComponent<PlayerSpotScript>();
+        
+        //GenerateBranch(curRow, 5);
+        GenerateFloor();
 
-        List<GameObject> curRow = new List<GameObject>();
-        curRow.Add(Instantiate(Node, transform.position, transform.rotation, transform));
-        GenerateBranch(curRow, 5);
+        Enemies = new List<EntityStats>();
+        Enemies.Add(new EntityStats());
+        DebugThing.Entity = Enemies[0];
+        DebugThing.UpdateShow();
     }
 
+
+    void GenerateFloor(int Length = 5)
+    {
+        //Load
+        GameObject Node = Resources.Load<GameObject>("Prefabs/Exploration/Node");
+        GameObject Line = Resources.Load<GameObject>("Prefabs/Exploration/Line");
+        
+        //First node
+        List<GameObject> curFloor = new List<GameObject>();
+        curFloor.Add(Instantiate(Node, transform.position, transform.rotation, transform));
+        Player.PosNode = curFloor[0];
+        for (int i = 1; i < Length; i++)
+        {
+            curFloor.Add(Instantiate(Node, transform.position + new Vector3(3 * i,0), transform.rotation, transform));
+            
+            GameObject line = Instantiate(Line, curFloor[i-1].transform);
+            line.GetComponent<LineRenderer>().SetPositions(new Vector3[2] { new Vector3(0, 0, -1), new Vector3(3 * i, 0, -1) });
+            NodeScript prevNode = curFloor[i-1].GetComponent<NodeScript>();
+            prevNode.PosibleNodes = new GameObject[1] { curFloor[i] };
+
+            NodeScript curNode = curFloor[i].GetComponent<NodeScript>();
+            curNode.Type = Random.Range(0, 2);
+        }
+    }
+
+    /*
     List<GameObject> GenerateBranch(List<GameObject> curRow, int amount = 3)
     {
         List<GameObject> nextRow = new List<GameObject>();
@@ -37,7 +69,7 @@ public class MapGenerationScript : MonoBehaviour
 
         return nextRow;
     }
-
+    */
     // Update is called once per frame
     void Update()
     {
